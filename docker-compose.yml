@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  inference:
+    image: cfi-amd
+    build: .
+    user: "1000:1000" # user id and group id of the user on the host machine
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    volumes:
+      - /full/path/to/sample:/sample
+      - /full/path/to/input.csv:/input.csv
+      - /full/path/to/output:/output
