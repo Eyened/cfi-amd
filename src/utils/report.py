@@ -191,10 +191,10 @@ class Report:
                 <h2>ETDRS grid</h2>
                 {grid_img}
                 <h2>Field measurements table:</h2>
-                <p>Area in mm², count in pixels</p>
+                <p>Area in mm², count in number of connected components.</p>
                 {table}
                 <h2>Field measurements grids:</h2>
-                <p>Left: count in pixels</p>
+                <p>Left: count (number of connected components)</p>
                 <p>Right: area in mm²</p>
                 {grids}
                 </body></html>
