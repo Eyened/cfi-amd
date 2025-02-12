@@ -18,7 +18,7 @@ Segmentation outputs are converted to area (in mm²) and counts (number of conne
 ## Inference
 
 1. Pull the docker image from the repository:
-```sh
+```
 docker pull ghcr.io/bjliefers/cfi-amd:latest
 ```
 
@@ -37,7 +37,7 @@ image2,/data/image2.jpg
 ```
 3. Run 
 
-Option 1 (docker-compose):
+Using docker-compose:
 
 Create a file `docker-compose.yml` like this:
 ```
@@ -68,16 +68,54 @@ The image should process each file in `/input.csv`, and write to the folder moun
 git clone git@github.com:Eyened/cfi-amd.git
 ```
 Download model weights:
-```
-?
-```
-Store them in the folder `models`
 
-Update docker-compose.yaml
+- https://github.com/Eyened/cfi-amd/releases/download/v0.1-alpha/discedge_july24.pt
+- https://github.com/Eyened/cfi-amd/releases/download/v0.1-alpha/fovea_july24.pt
+- https://github.com/Eyened/cfi-amd/releases/download/v0.1-alpha/drusen.zip
+- https://github.com/Eyened/cfi-amd/releases/download/v0.1-alpha/RPD.zip
+- https://github.com/Eyened/cfi-amd/releases/download/v0.1-alpha/pigment.zip
+
+Store them in a folder called `models`:
+```
+mkdir models
+unzip drusen.zip
+unzip RPD.zip
+unzip pigment.zip
+```
+To obtain this folder structure:
+```
+cfi-amd
+├── src
+│   ├── ...
+├── models
+│   ├── discedge_july24.pt
+│   ├── fovea_july24.pt
+│   ├── drusen
+│   │   ├── model_0.ckpt
+│   │   ├── model_1.ckpt
+│   │   ├── model_2.ckpt
+│   │   ├── model_3.ckpt
+│   │   └── model_4.ckpt
+│   ├── RPD
+│   │   ├── model_0.ckpt
+│   │   ├── model_1.ckpt
+│   │   ├── model_2.ckpt
+│   │   ├── model_3.ckpt
+│   │   └── model_4.ckpt
+│   ├── pigment
+│   │   ├── model_0.ckpt
+│   │   ├── model_1.ckpt
+│   │   ├── model_2.ckpt
+│   │   ├── model_3.ckpt
+│   │   └── model_4.ckpt
 ```
 
-```
-
+Build the image:
 ```
 docker-compose build
+```
+
+To run, check the volume mounts in `docker-compose.yml` and run
+```
+docker-compose up
 ```
