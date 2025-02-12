@@ -19,7 +19,7 @@ Segmentation outputs are converted to area (in mm²) and counts (number of conne
 
 1. Pull the docker image from the repository:
 ```
-docker pull ghcr.io/bjliefers/cfi-amd:latest
+docker pull ghcr.io/eyened/cfi-amd:latest
 ```
 
 2. Prepare your data:
