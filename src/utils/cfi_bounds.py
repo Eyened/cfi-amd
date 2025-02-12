@@ -88,7 +88,7 @@ class CFIBounds:
     def contrast_enhanced_10(self):
         # constrast enhanced with 10% of the radius
         return self.make_contrast_enhanced_res256(0.1)
-    
+
     @cached_property
     def sharpened_5(self):
         return self.make_contrast_enhanced_res256(0.05, contrast_factor=2, sharpen=True)
@@ -128,13 +128,13 @@ class CFIBounds:
         '''
         contrast enhance by blurring the image and subtracting 
         the blurred image from the original image
-        
+
         For a faster implementation check make_contrast_enhanced_res256
-        
+
         Args:
             - sigma: the standard deviation of the gaussian blur
             By default, sigma is set to 0.05 times the radius
-            
+
         '''
         if sigma is None:
             sigma = 0.05 * self.radius
@@ -195,7 +195,7 @@ class CFIBounds:
         d = int(np.round(shrink_ratio * self.radius))
         min_y, max_y = self.min_y + d, self.max_y - d
         min_x, max_x = self.min_x + d, self.max_x - d
-        
+
         # below min_y mirrored to above min_y
         result[:min_y] = result[2 * min_y - 1: min_y - 1: -1]
         # above max_y mirrored to below max_y
@@ -281,6 +281,21 @@ class CFIBounds:
             'radius': self.radius,
             'lines': {k: (v.tolist() if isinstance(v, np.ndarray) else list(v)) for k, v in self.lines.items()},
         }
+
+    def to_list(self):
+        result = [self.cx, self.cy, self.radius]
+        for line in ['top', 'bottom', 'left', 'right']:
+            if line in self.lines:
+                (x0, y0), (x1, y1) = self.lines[line]
+                result.extend([x0, y0, x1, y1])
+            else:
+                result.extend([None, None, None, None])
+        return result
+
+    list_names = ['cx', 'cy', 'radius', 'top_x0', 'top_y0', 'top_x1', 'top_y1',
+                  'bottom_x0', 'bottom_y0', 'bottom_x1', 'bottom_y1',
+                  'left_x0', 'left_y0', 'left_x1', 'left_y1',
+                  'right_x0', 'right_y0', 'right_x1', 'right_y1']
 
     @classmethod
     def from_dict(cls, image, d):

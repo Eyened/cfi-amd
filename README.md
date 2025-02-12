@@ -53,7 +53,7 @@ services:
 ```
 Make sure that:
 - Your .csv file is available to the container under `/input.csv`
-- The target directory is mounted at `/output` (this is where the output will be generated)
+- The target directory exists and is mounted at `/output` (this is where the output will be generated)
 - ensure the paths in the .csv file are accessible inside the container
 - [optionally] configure available gpu devices
 
@@ -72,6 +72,11 @@ Download model weights:
 ?
 ```
 Store them in the folder `models`
+
+Update docker-compose.yaml
+```
+
+```
 
 ```
 docker-compose build

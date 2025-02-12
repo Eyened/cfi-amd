@@ -8,6 +8,6 @@ services:
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
     volumes:
-      - /home/bart/25/cfi-amd/sample:/sample
-      - /home/bart/25/cfi-amd/sample/input.csv:/input.csv
-      - /home/bart/25/cfi-amd/sample/output:/output
+      - /home/bart/25/cfi-amd/sample:/data
+      - /home/bart/25/cfi-amd/input.csv:/input.csv
+      - /home/bart/25/cfi-amd/output:/output
