@@ -26,7 +26,7 @@ docker pull ghcr.io/eyened/cfi-amd:latest
 
 The docker image expects as input a .csv file with two columns:
 - `identifier` (name or ID of the image)
-- `path` (the full path to the image)
+- `path` (the path to the image in the container including a /data prefix)
 
 For example:
 ```
@@ -43,7 +43,7 @@ Create a file `docker-compose.yml` like this:
 ```
 services:
   inference:
-    image: ghcr.io/bjliefers/cfi-amd:latest
+    image: ghcr.io/eyened/cfi-amd:latest
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
     volumes:
@@ -51,6 +51,12 @@ services:
       - /full/path/to/output:/output
       - /full/path/to/data:/data
 ```
+
+Using docker run:
+```
+docker run --gpus '"device=0"' -v /path/to/input.csv:/input.csv -v /path/to/output:/output -v /path/to/images:/data ghcr.io/eyened/cfi-amd:latest
+```
+
 Make sure that:
 - Your .csv file is available to the container under `/input.csv`
 - The target directory exists and is mounted at `/output` (this is where the output will be generated)
@@ -82,6 +88,8 @@ unzip drusen.zip
 unzip RPD.zip
 unzip pigment.zip
 ```
+
+
 To obtain this folder structure:
 ```
 cfi-amd
