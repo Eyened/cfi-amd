@@ -17,4 +17,4 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 COPY models /app/models
 COPY cfi_amd /app/cfi_amd
 
-ENTRYPOINT ["python3", "/app/cfi_amd/main.py"]
+ENTRYPOINT ["python3", "-m", "cfi_amd.main"]
