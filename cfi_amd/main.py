@@ -4,12 +4,11 @@ from PIL import Image
 import numpy as np
 import os
 import json
-from utils.utils import open_image, to_uint8
-from utils.report import Report
-from utils.etdrs_masks import ETDRS_masks
-
-from processor import Processor
-from landmarks import LandmarksProcessor
+from .utils.utils import open_image, to_uint8
+from .utils.report import Report
+from .utils.etdrs_masks import ETDRS_masks
+from .processor import Processor
+from .landmarks import LandmarksProcessor
 
 feature_names = 'drusen', 'RPD', 'hyperpigmentation', 'rpe_degeneration'
 

@@ -2,7 +2,7 @@ import numpy as np
 import pydicom
 from PIL import Image
 
-from utils.transformation import get_affine_transform
+from .transformation import get_affine_transform
 
 
 def open_image(filename):

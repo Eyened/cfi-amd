@@ -1,6 +1,6 @@
 import torch
 import numpy as np
-from utils.mask_extraction import get_cfi_bounds
+from .utils.mask_extraction import get_cfi_bounds
 
 paths = {
     "disc_edge": "models/discedge_july24.pt",

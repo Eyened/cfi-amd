@@ -15,7 +15,43 @@ The output consists of a segmentation (binary images) of:
 In addition, it detects the bounds of the image and the location of the fovea and edge of the optic disc to place the ETDRS-grid.
 Segmentation outputs are converted to area (in mm²) and counts (number of connected components)
 
-## Inference
+## Installation
+To install as a python package:
+```
+git clone git@github.com:Eyened/cfi-amd.git
+cd cfi-amd
+pip install .
+```
+This will install the python package `cfi_amd`
+
+Then you can import the processor like this:
+```python
+from cfi_amd.processor import Processor
+
+device = 'cuda:0'
+processor = Processor(device)
+```
+
+The processor can be used like this:
+```python
+from PIL import Image
+import numpy as np
+import pydicom
+
+# jpg, png, tif etc:
+image = np.array(Image.open('/path/to/image.jpg'))
+# or dicom:
+image = pydicom.dcmread('/path/to/image.dcm').pixel_array
+
+result = processor.process(image)
+```
+Note that image is numpy array of shape (h, w, 3) of dtype np.uint8
+
+The result will contain the segmentation for each of the features.
+
+Check [example.ipynb](example.ipynb)
+
+## Inference using Docker
 
 1. Pull the docker image from the repository:
 ```
@@ -47,9 +83,9 @@ services:
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
     volumes:
-      - /full/path/to/input.csv:/input.csv
-      - /full/path/to/output:/output
-      - /full/path/to/data:/data
+      - /path/to/input.csv:/input.csv
+      - /path/to/output:/output
+      - /path/to/data:/data
 ```
 
 Using docker run:
@@ -70,8 +106,10 @@ docker-compose up
 The image should process each file in `/input.csv`, and write to the folder mounted under `/output`, making a subfolder for each row in the table.
 
 ## Building the image
+To build the Docker image, first clone the git repository:
 ```
 git clone git@github.com:Eyened/cfi-amd.git
+cd cfi-amd
 ```
 Download model weights:
 
@@ -93,7 +131,7 @@ unzip pigment.zip
 To obtain this folder structure:
 ```
 cfi-amd
-├── src
+├── cfi_amd
 │   ├── ...
 ├── models
 │   ├── discedge_july24.pt

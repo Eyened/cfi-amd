@@ -3,7 +3,6 @@ from functools import cached_property
 from skimage import measure
 import uuid
 
-
 class ETDRS_masks:
 
     # naming convention: CSF = central subfield

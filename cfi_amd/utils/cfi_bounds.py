@@ -8,8 +8,8 @@ Classes:
 from functools import cached_property, lru_cache
 from scipy.ndimage import gaussian_filter
 import numpy as np
-from utils.transformation import get_affine_transform
-from utils.utils import to_uint8
+from .transformation import get_affine_transform
+from .utils import to_uint8
 
 
 class CFIBounds:

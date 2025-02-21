@@ -1,10 +1,12 @@
-from model import UNet
+from .model import UNet
 import lightning as L
 import torch
 import numpy as np
-from utils.mask_extraction import get_cfi_bounds
+from .utils.mask_extraction import get_cfi_bounds
+import os
 
 model_folder = 'models'
+
 
 class Model(L.LightningModule):
 
@@ -36,12 +38,16 @@ class Model2(Model):
         super().__init__(2)
 
 
-def load_models(feature, device):
+def load_models(feature, device):    
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(current_dir)
+    
     # pigment model segments both RPE degeneration and hyperpigmentation
     constructor = Model2 if feature == 'pigment' else Model1
     return [
         constructor.load_from_checkpoint(
-            checkpoint_path=f'{model_folder}/{feature}/model_{i}.ckpt',
+            checkpoint_path=os.path.join(
+                parent_dir, model_folder, feature, f'model_{i}.ckpt'),
             map_location=device)
         for i in range(5)]
 
@@ -99,9 +105,9 @@ class Processor:
     def process(self, image, radius_fraction=1):
         bounds = get_cfi_bounds(image)
         T, bounds_cropped = bounds.crop(1024)
-        
+
         bounds_cropped.radius = radius_fraction * bounds_cropped.radius
-        
+
         images = np.concatenate([
             bounds_cropped.image,
             bounds_cropped.contrast_enhanced_5,
@@ -120,14 +126,15 @@ class Processor:
                 y_pred = model(x)
                 y_np = torch.sigmoid(y_pred).detach().cpu().numpy()
                 y_preds.append(y_np.squeeze())
-            
+
             y_preds = np.array(y_preds)
-            
+
             if feature == 'pigment':
                 # pigment model has 2 output channels
                 for i, f in enumerate(['rpe_degeneration', 'hyperpigmentation']):
                     y_pred_feature = y_preds[:, i]
-                    y_pred = self.combine_ensemble(y_pred_feature, self.thresholds[f])
+                    y_pred = self.combine_ensemble(
+                        y_pred_feature, self.thresholds[f])
                     y_orig = T.warp_inverse(y_pred)
                     y_orig[~bounds.mask] = 0
                     result[f] = y_orig

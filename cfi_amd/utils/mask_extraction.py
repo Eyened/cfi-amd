@@ -3,9 +3,9 @@ import cv2
 from scipy.ndimage import sobel
 from sklearn.linear_model import RANSACRegressor
 
-from utils.circle_fit import find_circle, circle_fit
-from utils.cfi_bounds import CFIBounds
-from utils.utils import get_gray_scale, rescale
+from .circle_fit import find_circle, circle_fit
+from .cfi_bounds import CFIBounds
+from .utils import get_gray_scale, rescale
 
 
 RESOLUTION = 256
