@@ -71,7 +71,15 @@ image0,/data/image0.dcm
 image1,/data/image1.png
 image2,/data/image2.jpg
 ```
-3. Run 
+3. Run
+
+The image should process each file in `/input.csv`, and write to the folder mounted under `/output`, making a subfolder for each row in the table.
+
+Make sure that:
+- Your .csv file is available to the container under `/input.csv`
+- The target directory exists and is mounted at `/output` (this is where the output will be generated)
+- ensure the paths in the .csv file are accessible inside the container
+- [optionally] configure available gpu devices
 
 Using docker-compose:
 
@@ -87,23 +95,16 @@ services:
       - /path/to/output:/output
       - /path/to/data:/data
 ```
-
-Using docker run:
-```
-docker run --gpus '"device=0"' -v /path/to/input.csv:/input.csv -v /path/to/output:/output -v /path/to/images:/data ghcr.io/eyened/cfi-amd:latest
-```
-
-Make sure that:
-- Your .csv file is available to the container under `/input.csv`
-- The target directory exists and is mounted at `/output` (this is where the output will be generated)
-- ensure the paths in the .csv file are accessible inside the container
-- [optionally] configure available gpu devices
-
 Run:
 ```
 docker-compose up
 ```
-The image should process each file in `/input.csv`, and write to the folder mounted under `/output`, making a subfolder for each row in the table.
+
+Alternativelu, using docker run:
+```
+docker run --gpus '"device=0"' -v /path/to/input.csv:/input.csv -v /path/to/output:/output -v /path/to/images:/data ghcr.io/eyened/cfi-amd:latest
+``
+
 
 ## Building the image
 To build the Docker image, first clone the git repository:
