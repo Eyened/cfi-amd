@@ -5,12 +5,18 @@ from PIL import Image
 from .transformation import get_affine_transform
 
 
-def open_image(filename):
+def open_image_from_path(path):
     try:
-        return np.array(Image.open(filename))
+        return np.array(Image.open(path))
     except:
-        return pydicom.dcmread(filename, force=True).pixel_array
+        return pydicom.dcmread(path, force=True).pixel_array
 
+def open_image(filename):
+    image = open_image_from_path(filename)
+    # remove alpha channel if it exists
+    if image.shape[2] == 4:
+        image = image[:, :, :3]    
+    return image
 
 def get_gray_scale(array):
     assert array.dtype == np.uint8, f"Expected uint8, got {array.dtype}"
