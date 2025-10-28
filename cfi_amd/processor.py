@@ -3,9 +3,8 @@ import lightning as L
 import torch
 import numpy as np
 from .utils.mask_extraction import get_cfi_bounds
-import os
-
-model_folder = 'models'
+from pathlib import Path
+from .resources import get_models_base_dir, ensure_models_downloaded
 
 
 class Model(L.LightningModule):
@@ -38,18 +37,22 @@ class Model2(Model):
         super().__init__(2)
 
 
-def load_models(feature, device):    
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    parent_dir = os.path.dirname(current_dir)
-    
+def load_models(feature, device, models_dir=None):    
+    base_dir = get_models_base_dir(models_dir)
+    ensure_models_downloaded(base_dir)
+    feature_dir = Path(base_dir) / feature
     # pigment model segments both RPE degeneration and hyperpigmentation
     constructor = Model2 if feature == 'pigment' else Model1
-    return [
-        constructor.load_from_checkpoint(
-            checkpoint_path=os.path.join(
-                parent_dir, model_folder, feature, f'model_{i}.ckpt'),
-            map_location=device)
-        for i in range(5)]
+    models = []
+    for i in range(5):
+        ckpt = feature_dir / f'model_{i}.ckpt'
+        print(f"loading model: {ckpt}")
+        models.append(
+            constructor.load_from_checkpoint(
+                checkpoint_path=str(ckpt),
+                map_location=device)
+        )
+    return models
 
 
 # separate models for each feature
@@ -58,16 +61,18 @@ features = 'drusen', 'pigment', 'RPD'
 
 class Processor:
 
-    def __init__(self, device, mode="th_0.5"):
+    def __init__(self, device, mode="th_0.5", models_dir=None):
         '''
         args:
         device: torch device
         mode: "th_0.5" or "th_optimal"
+        models_dir: optional path to the folder containing model checkpoints
         '''
         self.device = device
         self.mode = mode
+        self.models_dir = models_dir
         self.models = {
-            feature: load_models(feature, device)
+            feature: load_models(feature, device, models_dir=self.models_dir)
             for feature in features
         }
 

@@ -29,7 +29,7 @@ Then you can import the processor like this:
 from cfi_amd.processor import Processor
 
 device = 'cuda:0'
-processor = Processor(device)
+processor = Processor(device)  # automatically sets up models on first run
 ```
 
 The processor can be used like this:
@@ -112,7 +112,14 @@ To build the Docker image, first clone the git repository:
 git clone git@github.com:Eyened/cfi-amd.git
 cd cfi-amd
 ```
-Download model weights:
+Automatic model setup
+On first use, the library downloads and unzips required assets into a per-user cache directory (platform-specific):
+- Linux: `~/.cache/cfi-amd/models`
+- macOS: `~/Library/Caches/cfi-amd/models`
+- Windows: `%LOCALAPPDATA%\cfi-amd\models`
+You may override the location with `models_dir` when constructing `Processor`.
+
+Download model weights (for manual setup):
 
 - https://github.com/Eyened/cfi-amd/releases/download/v0.1-alpha/discedge_july24.pt
 - https://github.com/Eyened/cfi-amd/releases/download/v0.1-alpha/fovea_july24.pt
