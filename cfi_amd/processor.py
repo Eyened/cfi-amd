@@ -44,9 +44,9 @@ def load_models(feature, device, models_dir=None):
     # pigment model segments both RPE degeneration and hyperpigmentation
     constructor = Model2 if feature == 'pigment' else Model1
     models = []
+    print(f"loading model: {feature_dir}")
     for i in range(5):
-        ckpt = feature_dir / f'model_{i}.ckpt'
-        print(f"loading model: {ckpt}")
+        ckpt = feature_dir / f'model_{i}.ckpt'        
         models.append(
             constructor.load_from_checkpoint(
                 checkpoint_path=str(ckpt),
